@@ -28,3 +28,18 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+- task: CpoyFiles@1
+  displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+  inputs:
+     SourceFolder: '$(build.sourcedirectory)'
+     Contents: |
+      **\bin\$(BuildConfiguration)\**
+      src\*.testsettings
+     TargetFolder: '$(build.artifactstagingdirectory)'
+  condition: succeededOrFailded()
+
+- task: PublishBuildArtifact@1
+  displayname: 'Publish Artifact: drop'
+  inputs:
+   PathtoPublish: '$(build.artifactstagingdirectory)'
+  condition: succeededOrFailed()
